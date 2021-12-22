@@ -1,6 +1,7 @@
 import subprocess
 import flask
 from flask import request
+from tools import escape, fake_escape
 
 app = flask.Flask(__name__)
 
@@ -30,5 +31,14 @@ def ping():
     stdoutdata = subprocess.getoutput("ping -c 2 " + location)
     return stdoutdata.replace("\n", "<br>")
 
+@app.route('/')
+def looks_bad_and_bed():
+    name = request.args.get('name', "World")
+    return fake_escape(name)
+
+@app.route('/')
+def looks_bad_but_ok():
+    name = request.args.get('name', "World")
+    return escape(name)
 
 app.run(host="0.0.0.0", port=8080, debug=True)
